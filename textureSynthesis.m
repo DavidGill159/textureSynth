@@ -1,4 +1,6 @@
-function [im,snrP,imS] = textureSynthesis(params, im0, Niter, cmask, imask)
+%function [im,snrP,imS] = textureSynthesis(params, im0, Niter, cmask, imask)
+function [im,snrP,imS] = textureSynthesis(params, im0, Niter, cmask, imask, overrideNsc)
+
 
 % [res,snrP,imS] = textureSynthesis(params, initialIm, Niter, cmask, imask)
 %
@@ -117,16 +119,17 @@ if  exist('imask') & ~isempty(imask),
 	end
 end
 
-imf = max(1,gcf-1); snrf = imf+1;
-figure(imf);  clf
-subplot(1,2,1); grayRange = showIm(im,'auto',1); title('Starting image');
-drawnow
+
+% imf = max(1,gcf-1); snrf = imf+1;
+% figure(imf);  clf
+% subplot(1,2,1); grayRange = showIm(im,'auto',1); title('Starting image');
+% drawnow
 
 prev_im=im;
 
-imf = max(1,gcf-1);
-figure(imf);   
-clf;showIm(im,'auto',1); title(sprintf('iteration 0'));
+% imf = max(1,gcf-1);
+% figure(imf);   
+% clf;showIm(im,'auto',1); title(sprintf('iteration 0'));
 
 nq = 0;
 Nq = floor(log2(Niter));
@@ -137,6 +140,11 @@ for niter = 1:Niter
 
 %p = niter/Niter; 
 p = 1;
+
+%% DG - torubleshoot - 23/05/2025
+  if exist('overrideNsc', 'var') && ~isempty(overrideNsc)
+      Nsc = overrideNsc;
+  end
 
   %% Build the steerable pyramid
   [pyr,pind] = buildSCFpyr(im,Nsc,Nor-1);
@@ -387,12 +395,12 @@ end	% cmask(1)
   tmp = prev_im;
   prev_im=im;	
 
-  figure(imf);
-  subplot(1,2,1);
-  showIm(im-tmp,'auto',1); title('Change');
-  subplot(1,2,2);
-  showIm(im,'auto',1); title(sprintf('iteration %d/%d',niter,Niter));
-  drawnow
+  % figure(imf);
+  % subplot(1,2,1);
+  % showIm(im-tmp,'auto',1); title('Change');
+  % subplot(1,2,2);
+  % showIm(im,'auto',1); title(sprintf('iteration %d/%d',niter,Niter));
+  % drawnow
   
   % accelerator
   alpha = 0.8;
@@ -409,23 +417,23 @@ if ~commented,
 % This is why in some cases it seems that some of
 % the parameters do not converge at all.
 
-figure(snrf);
-if cmask(1)
-  subplot(171); plot(snr7); title('Mrgl stats');
-end
-if cmask(2),
-  subplot(172); plot(snr2); title('Raw auto');
-end
-if cmask(3),
-  subplot(173); plot(snr1); title('Mag auto'); 
-  subplot(174); plot(snr3); title('Mag ori');
-  subplot(175); plot(snr4); title('Mag scale');
-end
-if (Nrp > 0) & cmask(4),
-  subplot(176); plot(snr4r); title('Phs scale');
-end
-  subplot(177); plot(snr6); title('Im change');
-  drawnow
+% figure(snrf);
+% if cmask(1)
+%   subplot(171); plot(snr7); title('Mrgl stats');
+% end
+% if cmask(2),
+%   subplot(172); plot(snr2); title('Raw auto');
+% end
+% if cmask(3),
+%   subplot(173); plot(snr1); title('Mag auto'); 
+%   subplot(174); plot(snr3); title('Mag ori');
+%   subplot(175); plot(snr4); title('Mag scale');
+% end
+% if (Nrp > 0) & cmask(4),
+%   subplot(176); plot(snr4r); title('Phs scale');
+% end
+%   subplot(177); plot(snr6); title('Im change');
+%   drawnow
   
 end  % if ~commented
 
