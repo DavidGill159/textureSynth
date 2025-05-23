@@ -84,9 +84,9 @@ pyr0(pyrBandIndices(pind0,nband)) = ...
 rpyr0 = real(pyr0);
 apyr0 = abs(pyr0);
 
-figure(gcf)
-clf
-showIm(im0,'auto',1); title('Original');  drawnow
+% figure(gcf)
+% clf
+% showIm(im0,'auto',1); title('Original');  drawnow
 
 %% Subtract mean of magnitude:
 magMeans0 = zeros(size(pind0,1), 1);
